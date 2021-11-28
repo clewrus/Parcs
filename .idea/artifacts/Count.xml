@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="Count">
-    <output-path>$PROJECT_DIR$/out/artifacts/Count</output-path>
+    <output-path>$PROJECT_DIR$/out</output-path>
     <root id="archive" name="Count.jar">
       <element id="file-copy" path="$PROJECT_DIR$/src/Count.java" />
       <element id="file-copy" path="$PROJECT_DIR$/out/Count.class" />
