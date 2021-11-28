@@ -61,9 +61,14 @@ public class Solver implements AM
 
         res.sort(BigInteger::compareTo);
 
-        System.out.println("Founded roots: ");
-        for( BigInteger x : res ) {
-            System.out.println("x = " + x.toString());
+        if( res.isEmpty() ) {
+            System.out.println( "There are no roots" );
+        }
+        else {
+            System.out.println("Founded roots: ");
+            for( BigInteger x : res ) {
+                System.out.println("x = " + x.toString());
+            }
         }
 
         System.out.println();

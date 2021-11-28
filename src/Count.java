@@ -18,7 +18,7 @@ public class Count implements AM {
         for(BigInteger x = from; x.compareTo(to) < 0; x = x.add(BigInteger.valueOf(1))) {
             BigInteger y = a.modPow( x, m );
             if( y.compareTo(b) == 0 ) {
-                roots.add(y);
+                roots.add(x);
             }
         }
 
