@@ -1,23 +1,27 @@
 import parcs.*;
 
+import java.lang.reflect.Array;
+import java.math.BigInteger;
+import java.util.ArrayList;
+
 public class Count implements AM {
     public void run(AMInfo info) {
-        long a, b;
+        BigInteger from = (BigInteger)info.parent.readObject();
+        BigInteger to = (BigInteger)info.parent.readObject();
 
-        a = info.parent.readLong();
-        b = info.parent.readLong();
-        long k = 0;
-        System.out.println("Worker started");
-        for (long n = a; n < b + 1; n++) {
-            for (long i = 1; i < n / 3 + 1; i++) {
-                if (i * i * i == n) {
-                    k++;
-                    System.out.print(n + ", ");
-                }
+        BigInteger a = (BigInteger)info.parent.readObject();
+        BigInteger b = (BigInteger)info.parent.readObject();
+        BigInteger m = (BigInteger)info.parent.readObject();
+
+        ArrayList<BigInteger> roots = new ArrayList<BigInteger>();
+
+        for(BigInteger x = from; x.compareTo(to) < 0; x = x.add(BigInteger.valueOf(1))) {
+            BigInteger y = a.modPow( x, m );
+            if( y.compareTo(b) == 0 ) {
+                roots.add(y);
             }
         }
 
-        info.parent.write(k);
-
+        info.parent.write(roots);
     }
 }

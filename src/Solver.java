@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.math.*;
 import java.util.*;
 
@@ -6,6 +7,9 @@ import parcs.*;
 
 public class Solver implements AM
 {
+
+    //test 228 ^ 18 = 322 (mod 2287)
+    //test 322 ^ 894 = 228 (mod 3221)
 
     public static void main(String[] args)
     {
@@ -17,59 +21,69 @@ public class Solver implements AM
         mainTask.addJarFile("Count.jar");
 
         System.out.print("class Solver method main adder jars\n");
-
         (new Solver()).run(new AMInfo(mainTask, (channel)null));
-
         System.out.print("class Solver method main finish work\n");
-
 
         mainTask.end();
     }
 
     public void run(AMInfo info)
     {
-        long n, a, b;
+        int workerNum;
+        BigInteger a, b, m;
 
         try
         {
             BufferedReader in = new BufferedReader(new FileReader(info.curtask.findFile("input.txt")));
 
-            n = new Long(in.readLine()).longValue();
-            a = new Long(in.readLine()).longValue();
-            b = new Long(in.readLine()).longValue();
+            // a^x = b (mod m)
+            workerNum = Integer.parseInt( in.readLine() );
+            a = new BigInteger( in.readLine() );
+            b = new BigInteger( in.readLine() );
+            m = new BigInteger( in.readLine() );
         }
         catch (IOException e)
         {
-            System.out.print("Error while reading input\n");
-
+            System.out.println("Error while reading input.\nExpected workerNum, a, b, m in separate lines (a^x = b (mod m))");
             e.printStackTrace();
-
             return;
         }
 
-        System.out.print("class Solver method run read data from file\na");
+        System.out.println("Read input file, got");
+        System.out.println("workerNum = " + workerNum);
+        System.out.println("a = " + a);
+        System.out.println("b = " + b);
+        System.out.println("m = " + m);
 
         long tStart = System.nanoTime();
-
-        long res = solve(info, n, a, b);
-
+        ArrayList<BigInteger> res = solve(info, workerNum, a, b, m);
         long tEnd = System.nanoTime();
 
-        System.out.println("Count = " + res);
+        res.sort(BigInteger::compareTo);
 
+        System.out.println("Founded roots: ");
+        for( BigInteger x : res ) {
+            System.out.println("x = " + x.toString());
+        }
+
+        System.out.println();
         System.out.println("time = " + ((tEnd - tStart) / 1000000) + "ms");
     }
 
-    static public long solve(AMInfo info, long n, long a, long b) {
+    static public ArrayList<BigInteger> solve(AMInfo info, int workersNum, BigInteger a, BigInteger b, BigInteger m) {
         List<point> points = new ArrayList<>();
         List<channel> channels = new ArrayList<>();
 
-        long remainder = (b - a) % n;
-        long length = (b - a) / n;
+        BigInteger remainder = m.mod( BigInteger.valueOf( workersNum ) );
+        BigInteger length = m.divide( BigInteger.valueOf( workersNum) );
 
-        for (int index = 0; index < n; ++index) {
-            long currentStart = index * length;
-            long currentEnd = (index + 1) * length + ((n - index - 1 < remainder) ? 1 : 0);
+        for (int index = 0; index < workersNum; ++index) {
+            BigInteger currentStart = length.multiply( BigInteger.valueOf(index) );
+            BigInteger currentEnd = length.multiply(( BigInteger.valueOf(index + 1)));
+
+            if( index == workersNum - 1) {
+                currentEnd = currentEnd.add( remainder );
+            }
 
             System.out.println(index + " worker range: " + currentStart + " - " + currentEnd);
 
@@ -82,14 +96,15 @@ public class Solver implements AM
             newPoint.execute("Count");
             newChannel.write(currentStart);
             newChannel.write(currentEnd);
-            newChannel.write(index);
+            newChannel.write(a);
+            newChannel.write(b);
+            newChannel.write(m);
         }
 
-        long result = 0;
-        for (int index = 0; index < n; ++index) {
-            long threadResult = channels.get(index).readLong();
-            System.out.println("Worker result: " + threadResult);
-            result += threadResult;
+        ArrayList<BigInteger> result = new ArrayList<>();
+        for (int index = 0; index < workersNum; ++index) {
+            ArrayList<BigInteger> threadResult = (ArrayList<BigInteger>)channels.get(index).readObject();
+            result.addAll(threadResult);
         }
 
         return result;
