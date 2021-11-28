@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Count">
+    <output-path>$PROJECT_DIR$/out/artifacts/Count</output-path>
+    <root id="archive" name="Count.jar">
+      <element id="file-copy" path="$PROJECT_DIR$/src/Count.java" />
+      <element id="file-copy" path="$PROJECT_DIR$/out/production/Parcs/Count.class" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/out/parcs.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

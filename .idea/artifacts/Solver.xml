@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Solver">
+    <output-path>$PROJECT_DIR$/out/artifacts/Solver</output-path>
+    <root id="archive" name="Solver.jar">
+      <element id="file-copy" path="$PROJECT_DIR$/src/Solver.java" />
+      <element id="file-copy" path="$PROJECT_DIR$/out/production/Parcs/Solver.class" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/out/parcs.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
